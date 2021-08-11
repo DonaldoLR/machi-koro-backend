@@ -4,19 +4,18 @@ class Application
     res = Rack::Response.new
     req = Rack::Request.new(env)
 
-    # CARDS ROUTES 
+    # CARD ROUTES 
     ## READ - Return all cards
     if req.path == '/cards' && req.get?
       cards = Card.all
       return [200, { 'Content-Type' => 'application/json' }, [ cards.to_json ]]
     end
-    ## REAF - Return a single card
+    ## READ - Return a single card
     if req.path.match(/cards/) && req.get? 
       id = req.path.split('/')[2]
       card = Card.find_by(id: id)
       return [200, { 'Content-Type' => 'application/json' }, [ card.to_json ]]
     end
-
 
     ## CREATE 
     if req.path.match(/cards/) && req.post? 
@@ -43,8 +42,14 @@ class Application
     end
 
 
+    ## ESTABLISHMENT ROUTES
+    ## READ - Return all establishments with their cards
+    if req.path == '/establishments' && req.get? 
+      establishments = Establishment.all
+      return [200, { 'Content-Type' => 'application/json' }, [ establishments.as_json(include: :cards).to_json ]]
+    end
 
-
+    ## TEST ROUTE
     if req.path.match(/test/) 
       return [200, { 'Content-Type' => 'application/json' }, [ {:message => "test response!"}.to_json ]]
     else
