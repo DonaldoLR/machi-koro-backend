@@ -1,5 +1,19 @@
-development:
-  adapter: sqlite3
-  database: db/development.sqlite3
+# development:
+#   adapter: sqlite3
+#   database: db/development.sqlite3
+#   pool: 5
+#   timeout: 5000
+# Swap <app-name> for whatever your project's name is (without the '<>')
+default: &default
+  adapter: postgresql
+  encoding: unicode
   pool: 5
-  timeout: 5000
+development:
+  <<: *default
+  database: machi-koro-database_dev
+test:
+  <<: *default
+  database: machi-koro-database_test
+production:
+  <<: *default
+  database: machi-koro-database
