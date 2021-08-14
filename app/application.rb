@@ -12,34 +12,55 @@ class Application
     end
     ## READ - Return a single card
     if req.path.match(/cards/) && req.get? 
-      id = req.path.split('/')[2]
-      card = Card.find_by(id: id)
-      return [200, { 'Content-Type' => 'application/json' }, [ card.to_json ]]
+      # id = req.path.split('/')[2]
+      # card = Card.find_by(id: id)
+      card = find_card(req.path)
+      if card 
+        return [200, { 'Content-Type' => 'application/json' }, [ card.to_json ]]
+      else
+        return [404, { 'Content-Type' => 'application/json' }, [ {message: "Card Not Found"}.to_json ]]
+      end
+      
     end
 
     ## CREATE 
     if req.path.match(/cards/) && req.post? 
       body = JSON.parse(req.body.read)
-      puts body
       new_card = Card.create(body)
       return [200, { 'Content-Type' => 'application/json' }, [ new_card.to_json ]]
     end
 
     ## UPDATE 
     if req.path.match(/cards/) && req.put?
-      id = req.path.split('/')[2]
-      body = JSON.parse(req.body.read)
-      card = Card.find_by(id: id)
-      card.update(body)
-      return [200, { 'Content-Type' => 'application/json' }, [ card.to_json ]]
+      # id = req.path.split('/')[2]
+      # card = Card.find_by(id: id)
+      card = find_card(req.path)
+      if card 
+        body = JSON.parse(req.body.read)
+        card.update(body)
+        return [200, { 'Content-Type' => 'application/json' }, [ card.to_json ]]
+      else
+        return [404, { 'Content-Type' => 'application/json' }, [ {message: "Card Not Found"}.to_json ]]
+      end
+      
+      # body = JSON.parse(req.body.read)
+      # card.update(body)
+      # return [200, { 'Content-Type' => 'application/json' }, [ card.to_json ]]
     end
 
     ## DELETE
     if req.path.match(/cards/) && req.delete?
-      id = req.path.split('/')[2]
-      card = Card.find_by(id: id)
-      card.destroy
-      return [200, { 'Content-Type' => 'application/json' }, [ {}.to_json ]]
+      # id = req.path.split('/')[2]
+      # card = Card.find_by(id: id)
+      # card.destroy
+      # return [200, { 'Content-Type' => 'application/json' }, [ {}.to_json ]]
+      card = find_card(req.path)
+      if card 
+        card.destroy
+        return [200, { 'Content-Type' => 'application/json' }, [ {}.to_json ]]
+      else
+        return [404, { 'Content-Type' => 'application/json' }, [ {message: "Card Not Found"}.to_json ]]
+      end
     end
 
 
@@ -58,6 +79,14 @@ class Application
     end
 
     res.finish
+  end
+
+  ## Helping Functions 
+  def find_card(path)
+    id = path.split('/')[2]
+    # card = Card.find_by(id: id)
+    Card.find_by(id: id)
+    # card ? card : {message: "Card Not Found"}
   end
 
 end
