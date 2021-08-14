@@ -20,6 +20,7 @@ class Application
     ## CREATE 
     if req.path.match(/cards/) && req.post? 
       body = JSON.parse(req.body.read)
+      puts body
       new_card = Card.create(body)
       return [200, { 'Content-Type' => 'application/json' }, [ new_card.to_json ]]
     end
@@ -61,4 +62,4 @@ class Application
 
 end
 
-# {name: "", design_img}
+#Card.new(name: "Testing", design_img: 'Hi', build_cost: 1, establishment_id: 1, description: "Des")

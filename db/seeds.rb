@@ -1,8 +1,8 @@
 puts "Seed Data File Running..."
 
 puts "-- Destroying Old Data --"
-Establishment.destroy_all
 Card.destroy_all
+Establishment.destroy_all
 puts "-- Old Data Destroyed --"
 
 puts "-- Creating Establishments --"
